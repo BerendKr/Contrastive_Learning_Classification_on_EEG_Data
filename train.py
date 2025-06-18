@@ -36,7 +36,7 @@ if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     parser.add_argument('run_name', help='The folder name used to save model, output and evaluation metrics. This can be set to any word')
-    parser.add_argument('--gpu', type=str_or_int, default=0, help='The gpu no. used for training and inference (defaults to 0) (for cpu do cpu, for gpu do 0')
+    parser.add_argument('--gpu', type=str_or_int, default='cpu', help='The gpu no. used for training and inference (defaults to 0) (for cpu do cpu, for gpu do 0')
     parser.add_argument('--batch-size', type=int, default=8, help='The batch size (defaults to 8)')
     parser.add_argument('--lr', type=float, default=0.001, help='The learning rate (defaults to 0.001)')
     parser.add_argument('--scheduler', action="store_true", help='Whether to use the learning rate scheduler')
