@@ -63,9 +63,9 @@ if __name__ == '__main__':
     save_location = "./output/" + f"/final_seed_{args.seed}/"
 
     # t-SNE map of the encoder (per epoch) in 2D or 3D
-    tsne_ = False
+    tsne_ = True
     non_neur_deaths_green = False # requires binary PCPC labels to work
-    all_patients_visualized = False # give each patient their own color
+    all_patients_visualized = False # give each patient their own color, requires visual_labels = True to work
     dimension_tsne = 2 # 2 or 3 dimensions
 
     # Saliency maps
@@ -228,6 +228,7 @@ if __name__ == '__main__':
 
     ### Saliency maps ###
     if saliency:
+        train_data, train_labels, test_data, test_labels, train_data_dict, train_labels_dict = datautils.load_EEG_per_patient(data_path, fold, args.seed, binary_labels, visual_labels, n_folds)
         visualizations.saliency(model, device, test_data,
                                 example_patient_number,
                                 example_epoch_number,
@@ -241,6 +242,7 @@ if __name__ == '__main__':
 
     ### Feature heatmap ###
     if feature_heatmap:
+        train_data, train_labels, test_data, test_labels, train_data_dict, train_labels_dict = datautils.load_EEG_per_patient(data_path, fold, args.seed, binary_labels, visual_labels, n_folds)
         visualizations.feature_heatmap(test_data,
                                        test_labels,
                                        example_patient_number,

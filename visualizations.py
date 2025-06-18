@@ -106,7 +106,7 @@ def plot_saliency_per_channel(input_ts, saliency_raw, highlight_top_salient_regi
             # print("channel: ", c, 'threshold saliency 90%', threshold)
             salient_indices_strong = np.where(saliency >= threshold_strong)[0]
             normal_indices = np.where((saliency >= threshold) & (saliency < threshold_strong))[0]
-            # for idx in normal_indices: # TODO uncomment for highlights
+            # for idx in normal_indices: #  uncomment these 4 lines for highlights
             #     axs[c].axvspan(idx / 100, (idx + 1) / 100, color='yellow', alpha=0.2)
             # for idx in salient_indices_strong:
             #     axs[c].axvspan(idx / 100, (idx + 1) / 100, color='orange', alpha=0.2)
@@ -152,7 +152,7 @@ def plot_saliency_per_channel(input_ts, saliency_raw, highlight_top_salient_regi
 
 
 
-def saliency(model, device, test_data, example_patient_number=0, example_epoch_number=0, num_samples=50, noise_level=0.1, highlight_top_salient_regions=True, top_salient_regions_range=0.10, per_channel=False, random_seed=1):
+def saliency(model, device, test_data, example_patient_number=0, example_epoch_number=0, num_samples=50, noise_level=0.1, highlight_top_salient_regions=True, top_salient_regions_range=0.10, per_channel=False, random_seed=42):
     '''
     Computes and visualizes the saliency map for a given patient and epoch.
     Parameters:
@@ -235,20 +235,20 @@ def tsne_plot(all_repr, all_labels, binary_labels, visual_labels, fold, dimensio
                 "#d73027"   # deep red
             ]
         
-        if all_patients_visualized: # overrides other colors if all patients are visualized
-            custom_colors = [
-                "#696969", "#a9a9a9", "#d3d3d3", "#2f4f4f", "#556b2f", "#6b8e23", "#a0522d", "#a52a2a",
-                "#2e8b57", "#191970", "#006400", "#8b0000", "#808000", "#483d8b", "#5f9ea0", "#778899",
-                "#008000", "#3cb371", "#bc8f8f", "#663399", "#008080", "#bdb76b", "#cd853f", "#4682b4",
-                "#d2691e", "#9acd32", "#20b2aa", "#cd5c5c", "#00008b", "#4b0082", "#32cd32", "#daa520",
-                "#8fbc8f", "#800080", "#b03060", "#d2b48c", "#66cdaa", "#9932cc", "#ff0000", "#ff4500",
-                "#ff8c00", "#ffa500", "#ffd700", "#ffff00", "#c71585", "#0000cd", "#7cfc00", "#40e0d0",
-                "#00ff00", "#ba55d3", "#00fa9a", "#00ff7f", "#4169e1", "#dc143c", "#00ffff", "#00bfff",
-                "#9370db", "#0000ff", "#a020f0", "#adff2f", "#ff6347", "#d8bfd8", "#b0c4de", "#ff7f50",
-                "#ff00ff", "#1e90ff", "#db7093", "#f0e68c", "#fa8072", "#eee8aa", "#ffff54", "#6495ed",
-                "#dda0dd", "#90ee90", "#ff1493", "#7b68ee", "#ffa07a", "#afeeee", "#ee82ee", "#87cefa",
-                "#7fffd4", "#ff69b4", "#ffe4c4", "#ffc0cb"
-            ]
+    if all_patients_visualized: # overrides other colors if all patients are visualized
+        custom_colors = [
+            "#696969", "#a9a9a9", "#d3d3d3", "#2f4f4f", "#556b2f", "#6b8e23", "#a0522d", "#a52a2a",
+            "#2e8b57", "#191970", "#006400", "#8b0000", "#808000", "#483d8b", "#5f9ea0", "#778899",
+            "#008000", "#3cb371", "#bc8f8f", "#663399", "#008080", "#bdb76b", "#cd853f", "#4682b4",
+            "#d2691e", "#9acd32", "#20b2aa", "#cd5c5c", "#00008b", "#4b0082", "#32cd32", "#daa520",
+            "#8fbc8f", "#800080", "#b03060", "#d2b48c", "#66cdaa", "#9932cc", "#ff0000", "#ff4500",
+            "#ff8c00", "#ffa500", "#ffd700", "#ffff00", "#c71585", "#0000cd", "#7cfc00", "#40e0d0",
+            "#00ff00", "#ba55d3", "#00fa9a", "#00ff7f", "#4169e1", "#dc143c", "#00ffff", "#00bfff",
+            "#9370db", "#0000ff", "#a020f0", "#adff2f", "#ff6347", "#d8bfd8", "#b0c4de", "#ff7f50",
+            "#ff00ff", "#1e90ff", "#db7093", "#f0e68c", "#fa8072", "#eee8aa", "#ffff54", "#6495ed",
+            "#dda0dd", "#90ee90", "#ff1493", "#7b68ee", "#ffa07a", "#afeeee", "#ee82ee", "#87cefa",
+            "#7fffd4", "#ff69b4", "#ffe4c4", "#ffc0cb"
+        ]
     
     cmap_custom = ListedColormap(custom_colors)
 

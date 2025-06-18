@@ -4,7 +4,7 @@ from sklearn.metrics import roc_curve, auc
 from sklearn.metrics import confusion_matrix, classification_report
 import seaborn as sns
 import matplotlib
-# matplotlib.use("Agg")  # to avoid some GUI crashes during parallel processing for classifier fitting
+# matplotlib.use("Agg")  # uncomment to avoid some GUI crashes during parallel processing for classifier fitting
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
@@ -21,7 +21,6 @@ def find_best_p1_p2_5fold(best_params, train_repr_dict, train_labels_dict, visua
     Splits the data by patient, trains KNN on 80% of patients, and validates on 20%.
     Returns the average best p1 and p2 values over the 5 folds.
     """
-    # np.random.seed(random_seed)
 
     patients = list(train_repr_dict.keys())
     kf = KFold(n_splits=5, shuffle=True, random_state=random_seed)
@@ -167,6 +166,7 @@ def eval_classification_per_patient(model, train_data, train_labels, test_data, 
     
     best_p1, best_p2 = find_best_p1_p2_5fold(best_params, train_repr_dict, train_labels_dict, visual_labels, eval_protocol, random_seed)
 
+    print('best_p1: ', best_p1, 'best_p2: ', best_p2)
 
     ### evaluate on the test data with the best p1 and p2 according to the training data
     # for the confusion matrix and ROC curve
@@ -175,18 +175,15 @@ def eval_classification_per_patient(model, train_data, train_labels, test_data, 
         y_score = clf.predict_proba(test_repr_patient)
         results_dict[patient] = {'y_score': y_score[:, 1], 'true_label': test_labels[patient][0]} # class 1 probabilities
 
-    print('best_p1: ', best_p1, 'best_p2: ', best_p2)
-
     per_patient_prediction = []
     per_patient_labels = []
     patients_wrongly_predicted = []
     for patient, data in results_dict.items():
         y_score = data['y_score']
         true_label = data['true_label']
-        predictions = (y_score >= best_p1).astype(int) # TODO for p1 and p2
-        death_percentage = np.mean(predictions) # TODO for p1 and p2
-        # death_percentage = np.mean(y_score) # TODO for only p2
-        patient_prediction = 1 if death_percentage >= best_p2 else 0
+        predictions = (y_score >= best_p1).astype(int) # per epoch thresholding with p1
+        death_percentage = np.mean(predictions)
+        patient_prediction = 1 if death_percentage >= best_p2 else 0 # per patient thresholding with p2
         per_patient_prediction.append(patient_prediction)
         per_patient_labels.append(true_label)
         if results_dict[patient]['true_label'] != patient_prediction:
@@ -286,8 +283,7 @@ def eval_classification_per_patient(model, train_data, train_labels, test_data, 
 
 
 
-def eval_classification_per_patient_multilabels(model, train_data, train_labels, test_data, test_labels, train_data_dict, train_labels_dict, figure_save_location, fold, eval_protocol='knn', nosave=False, vlabels=False, random_seed=0):
-    # np.random.seed(random_seed)
+def eval_classification_per_patient_multilabels(model, train_data, train_labels, test_data, test_labels, train_data_dict, train_labels_dict, figure_save_location, fold, eval_protocol='knn', nosave=False, vlabels=False, random_seed=42):
 
     # Compute represenation of all the shuffled training data (used to train the full classifier)
     train_repr = model.encode(train_data, encoding_window='full_series' if train_labels.ndim == 1 else None)

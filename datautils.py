@@ -4,7 +4,7 @@ from sklearn.model_selection import KFold
 
 
 
-def load_EEG_per_patient(path, fold, random_seed=1, binary_labels=True, visual_labels=False, n_folds=5, non_neur_deaths_green=False):
+def load_EEG_per_patient(path, fold, random_seed=42, binary_labels=True, visual_labels=False, n_folds=5, non_neur_deaths_green=False, all_patients_visualized = False):
     ''' Here the train data is shuffled fully, also inter patient, but the test data is a dictionary with the patient number as key. '''
 
     all_data_df = pd.read_pickle(path)
@@ -19,7 +19,7 @@ def load_EEG_per_patient(path, fold, random_seed=1, binary_labels=True, visual_l
             test_patients = unique_patients[test_index]
             break
 
-    print('patients used for testing: ', test_patients)
+    print('patients in the test set: ', test_patients)
 
     train_data_df = all_data_df[all_data_df['patient_number'].isin(train_patients)].reset_index(drop=True)
     test_data_df = all_data_df[all_data_df['patient_number'].isin(test_patients)].reset_index(drop=True)
@@ -32,9 +32,11 @@ def load_EEG_per_patient(path, fold, random_seed=1, binary_labels=True, visual_l
     # Create train_data and train_labels as numpy arrays for training the encoder
     train_data = np.stack([arr[:, np.newaxis] if arr.ndim == 1 else arr for arr in train_data_df['eeg_array'].values])
     if visual_labels:
-        train_labels = train_data_df['vlabel'].to_numpy() # TODO change to 'patient_number1' for patient numbers as labels. otherwise it is 'vlabel'
+        train_labels = train_data_df['vlabel'].to_numpy()
         if binary_labels:
             train_labels = np.where(train_labels == 1, 0, 1) 
+        if all_patients_visualized:
+            train_labels = train_data_df['patient_number1'].to_numpy()
     else:
         train_labels = train_data_df['PCPC12m'].to_numpy()
         if binary_labels:
@@ -49,9 +51,11 @@ def load_EEG_per_patient(path, fold, random_seed=1, binary_labels=True, visual_l
     for patient in train_patients:
         train_data_dict[patient] = train_data_df[train_data_df['patient_number'] == patient].reset_index(drop=True)
         if visual_labels:
-            train_labels_dict[patient] = train_data_dict[patient]['vlabel'].to_numpy() # TODO change to 'patient_number1' for patient numbers as labels. otherwise it is 'vlabel'
+            train_labels_dict[patient] = train_data_dict[patient]['vlabel'].to_numpy()
             if binary_labels:
                 train_labels_dict[patient] = np.where(train_labels_dict[patient] == 1, 0, 1)
+            if all_patients_visualized:
+                train_labels_dict[patient] = train_data_dict[patient]['patient_number1'].to_numpy()
         else:
             train_labels_dict[patient] = train_data_dict[patient]['PCPC12m'].to_numpy()
             if binary_labels:
@@ -68,9 +72,11 @@ def load_EEG_per_patient(path, fold, random_seed=1, binary_labels=True, visual_l
     for patient in test_patients:
         test_data_dict[patient] = test_data_df[test_data_df['patient_number'] == patient].reset_index(drop=True)
         if visual_labels:
-            test_labels_dict[patient] = test_data_dict[patient]['vlabel'].to_numpy() # TODO change to 'patient_number1' for patient numbers as labels. otherwise it is 'vlabel'
+            test_labels_dict[patient] = test_data_dict[patient]['vlabel'].to_numpy()
             if binary_labels:
                 test_labels_dict[patient] = np.where(test_labels_dict[patient] == 1, 0, 1)
+            if all_patients_visualized:
+                test_labels_dict[patient] = test_data_dict[patient]['patient_number1'].to_numpy()
         else:
             test_labels_dict[patient] = test_data_dict[patient]['PCPC12m'].to_numpy()
             if binary_labels:
