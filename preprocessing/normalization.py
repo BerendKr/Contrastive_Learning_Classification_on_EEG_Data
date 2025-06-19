@@ -58,4 +58,4 @@ print("After normalization")
 print("mean: ", np.mean(all_eeg.mean(axis=(0, 1))))
 print("std. dev.: ", np.mean(all_eeg.std(axis=(0, 1))))
 
-EEG_df1.to_pickle("data/EEG_Timeseries_data_100_4D_C34_F78_vlabel_normalized_84_patients.pkl")
+EEG_df1.to_pickle("data/EEG_Timeseries_data_100_4D_C34_F78_vlabel_normalized_84.pkl")
