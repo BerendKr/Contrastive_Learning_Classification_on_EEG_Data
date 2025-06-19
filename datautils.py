@@ -27,7 +27,8 @@ def load_EEG_per_patient(path, fold, random_seed=42, binary_labels=True, visual_
     test_data_df['patient_number1'] = pd.Categorical(test_data_df['patient_number']).codes
 
 
-    ppppp = set(["028","033","084","095","097","102","104","123","142"]) # All non-neur deaths
+    nonneurpatients = set(["028","033","084","095","097","102","104","123","142"]) # All non-neur deaths
+    
 
     # Create train_data and train_labels as numpy arrays for training the encoder
     train_data = np.stack([arr[:, np.newaxis] if arr.ndim == 1 else arr for arr in train_data_df['eeg_array'].values])
@@ -42,7 +43,7 @@ def load_EEG_per_patient(path, fold, random_seed=42, binary_labels=True, visual_
         if binary_labels:
             train_labels = np.where(train_labels == 6, 1, 0)
             if non_neur_deaths_green:
-                train_labels_mask = (train_data_df['patient_number'].isin(ppppp)).astype(int).to_numpy()
+                train_labels_mask = (train_data_df['patient_number'].isin(nonneurpatients)).astype(int).to_numpy()
                 train_labels = np.where(train_labels_mask == 1, 2, train_labels)
 
     # Create train_data_dict (used when picking p1 and p2 for the classifier)
@@ -61,7 +62,7 @@ def load_EEG_per_patient(path, fold, random_seed=42, binary_labels=True, visual_
             if binary_labels:
                 train_labels_dict[patient] = np.where(train_labels_dict[patient] == 1, 1, 0)
                 if non_neur_deaths_green:
-                    if patient in ppppp:
+                    if patient in nonneurpatients:
                         train_labels_dict[patient][:] = 2
         train_data_dict[patient] = np.stack([arr[:, np.newaxis] if arr.ndim == 1 else arr for arr in train_data_dict[patient]['eeg_array'].values])
 
@@ -82,7 +83,7 @@ def load_EEG_per_patient(path, fold, random_seed=42, binary_labels=True, visual_
             if binary_labels:
                 test_labels_dict[patient] = np.where(test_labels_dict[patient] == 6, 1, 0)
                 if non_neur_deaths_green:
-                    if patient in ppppp:
+                    if patient in nonneurpatients:
                         test_labels_dict[patient][:] = 2
         test_data_dict[patient] = np.stack([arr[:, np.newaxis] if arr.ndim == 1 else arr for arr in test_data_dict[patient]['eeg_array'].values])
 

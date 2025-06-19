@@ -39,6 +39,17 @@ run_name (str) : name of the folder for saving model, outputs, and evaluation me
 
 More additional options/settings (paths, label selection and visualization) are in the train.py file on lines 57-83.
 
-The models that were used for the thesis are provided in the folder /pretrained_models/ for folds 0 to 4 and random seed 42.
+
+The data must be saved in folder /data/, as a pandas.DataFrame with columns:
+['patient_number','PCPC12m','vlabel','eeg_array']
+where patient number contains strings with the patient number (or name), e.g. '001'
+PCPC12m contains integers
+vlabel contains integers
+eeg_array contains numpy.ndarrays with the EEG data in the shape [T,C] (timesteps X channels)
+
+
+The encoder that were used for the thesis are provided in the folder /pretrained_models/ for folds 0 to 4.
+The encoder trained on the full dataset is also in this folder.
 These can be loaded in the train.py file on line 146.
+The random_seed used for the results in the report is 42.
 

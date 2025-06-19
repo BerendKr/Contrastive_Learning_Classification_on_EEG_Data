@@ -1,9 +1,5 @@
 /data/*
-/datasets/*[!.py]
 /training/*
-/figures/
-/training/
-/output/
 /.ipynb_checkpoints
 /__pycache__
 /scripts/_nohup
