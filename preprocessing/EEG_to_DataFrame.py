@@ -10,7 +10,7 @@ patient_features_excel_path = "Z:/06_PostOHCA_Pediatric/OLD_files/01_Clinical_Pa
 vlabels_excel_path = "Z:/06_PostOHCA_Pediatric/4-Metadata/Combined_EEG_Epoch_Classifications_30min.xlsx"
 
 # Output path for DataFrames
-output_folder = "Z:/06_PostOHCA_Pediatric/MasterScriptie/Data/"
+output_folder = "./data/"
 
 
 
