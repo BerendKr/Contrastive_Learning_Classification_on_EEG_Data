@@ -4,3 +4,4 @@
 /__pycache__
 /scripts/_nohup
 /.rsync-filter
+/Results_and_figures/*
